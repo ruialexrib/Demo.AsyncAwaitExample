@@ -26,12 +26,12 @@ namespace Demo.AsyncAwaitExample
                 case "1" /*Async Paralel*/:
                     List<Task<List<User>>> tasks = new List<Task<List<User>>>();
 
-                    //async paralel
                     for (int i = 0; i < 50; i++)
                     {
                         tasks.Add(Task.Run(() => GetUsersAsync()));
                     }
                     var results = await Task.WhenAll(tasks);
+
                     break;
 
                 case "2" /*Async*/:
@@ -39,6 +39,7 @@ namespace Demo.AsyncAwaitExample
                     {
                         await GetUsersAsync();
                     }
+
                     break;
 
                 case "3" /*Sync*/:
@@ -46,6 +47,7 @@ namespace Demo.AsyncAwaitExample
                     {
                         GetUsers();
                     }
+
                     break;
 
                 default:
@@ -59,6 +61,8 @@ namespace Demo.AsyncAwaitExample
 
         static List<User> GetUsers()
         {
+            string guid = Guid.NewGuid().ToString();
+            Console.WriteLine($"started. task id={guid}");
             string url = "https://restcore20200226095119.azurewebsites.net";
             string resource = "/api/users/";
 
@@ -71,7 +75,7 @@ namespace Demo.AsyncAwaitExample
                 if (response.IsSuccessful)
                 {
                     var queryResult = response.Data;
-                    Console.WriteLine($" records={queryResult.Count()}");
+                    Console.WriteLine($"loaded {queryResult.Count()} records,task id={guid}");
                     return queryResult;
                 }
                 else
@@ -88,6 +92,8 @@ namespace Demo.AsyncAwaitExample
 
         static async Task<List<User>> GetUsersAsync()
         {
+            string guid = Guid.NewGuid().ToString();
+            Console.WriteLine($"started. task id={guid}");
             string url = "https://restcore20200226095119.azurewebsites.net";
             string resource = "/api/users/";
 
@@ -100,7 +106,7 @@ namespace Demo.AsyncAwaitExample
                 if (response.IsSuccessful)
                 {
                     var queryResult = response.Data;
-                    Console.WriteLine($"loaded {queryResult.Count()} records");
+                    Console.WriteLine($"loaded {queryResult.Count()} records,task id={guid}");
                     return queryResult;
                 }
                 else
